@@ -67,7 +67,7 @@ You can automated publishing of packages to [Pub.dev] from GitHub Actions by usi
 
 ```yml
 # Setup Flutter SDK and automated pub.dev credentials
-- uses: flutter-actions/setup-flutter@v3
+- uses: flutter-actions/setup-flutter@v4
 - uses: flutter-actions/setup-pubdev-credentials@v1
 ```
 
@@ -90,7 +90,7 @@ For more information plase check https://docs.flutter.dev/get-started/install/ma
 
 ### Flutter uses Google Analytics
 
-Starting from `flutter-actions/setup-flutter@v3`, the action will disable **Flutter SDK** built-in **Google Analytics** by default.
+Starting from `flutter-actions/setup-flutter@v4`, the action will disable **Flutter SDK** built-in **Google Analytics** by default.
 
 ## Using outside of GitHub Actions environment
 
