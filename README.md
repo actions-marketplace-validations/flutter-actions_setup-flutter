@@ -90,7 +90,7 @@ For more information plase check https://docs.flutter.dev/get-started/install/ma
 
 ### Flutter uses Google Analytics
 
-Starting from `flutter-actions/setup-flutter@v4`, the action will disable **Flutter SDK** built-in **Google Analytics** by default.
+Starting from `flutter-actions/setup-flutter@v3`, the action will disable **Flutter SDK** built-in **Google Analytics** by default.
 
 ## Using outside of GitHub Actions environment
 
