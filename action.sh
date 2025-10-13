@@ -31,16 +31,29 @@ if [[ $FLUTTER_VERSION == "latest" ]]; then
 
 	# Determine the latest Flutter SDK version
 	if [ -f "$FLUTTER_RELEASE_MANIFEST_FILE" ]; then
-		__FLUTTER_CURRENT_RELEASE=$(jq -r ".current_release.${FLUTTER_CHANNEL}" "$FLUTTER_RELEASE_MANIFEST_FILE")
-		__QUERY="select(.hash == \"${__FLUTTER_CURRENT_RELEASE}\" and .dart_sdk_arch == \"${FLUTTER_ARCH}\")"
+		__HASH=$(jq -r ".current_release.${FLUTTER_CHANNEL}" "$FLUTTER_RELEASE_MANIFEST_FILE")
+		__QUERY="select(.hash == \"${__HASH}\" and .dart_sdk_arch == \"${FLUTTER_ARCH}\")"
+
+		# Find the version with matching architecture
 		FLUTTER_VERSION=$(jq -r ".releases | map(${__QUERY}) | .[0].version" "$FLUTTER_RELEASE_MANIFEST_FILE")
 		if [ -z "$FLUTTER_VERSION" ] || [ "$FLUTTER_VERSION" == "null" ]; then
-			echo -e "::error::Failed to determine the latest Flutter SDK version."
-			exit 1
+
+			# This is the last ditch effort to find a matching version
+			# Some architectures may not have a matching version in the current release
+			# I guess well-played Flutter team, well-played...
+
+			echo "::warning::No matching version found for architecture \"${FLUTTER_ARCH}\". Trying to find the last version with matching architecture..."
+			__QUERY="select(.channel == \"${FLUTTER_CHANNEL}\" and .dart_sdk_arch == \"${FLUTTER_ARCH}\")"
+			FLUTTER_VERSION=$(jq -r ".releases | map(${__QUERY}) | .[0].version" "$FLUTTER_RELEASE_MANIFEST_FILE")
+
+			if [ -z "$FLUTTER_VERSION" ] || [ "$FLUTTER_VERSION" == "null" ]; then
+				echo -e "::error::Failed to determine the latest Flutter SDK version."
+				exit 1
+			fi
 		fi
 		echo "Found the latest Flutter SDK version: ${FLUTTER_VERSION}"
 	else
-		echo -e "::error::Failed to determine the latest Flutter SDK version."
+		echo -e "::error::Failed to parse Flutter SDK release manifest."
 		exit 1
 	fi
 fi
