@@ -43,7 +43,7 @@ if [[ $FLUTTER_VERSION == "latest" ]]; then
 			# Some architectures may not have a matching version in the current release
 			# I guess well-played Flutter team, well-played...
 
-			echo "::warning::No matching version found for the current release hash and architecture."
+			echo "::warning::No matching version found for the current release hash and architecture. (hash = ${__HASH})"
 			echo "::warning::Attempting to find the latest version with matching channel and architecture instead..."
 			__QUERY="select(.channel == \"${FLUTTER_CHANNEL}\" and .dart_sdk_arch == \"${FLUTTER_ARCH}\")"
 			FLUTTER_VERSION=$(jq -r ".releases | map(${__QUERY}) | .[0].version" "$FLUTTER_RELEASE_MANIFEST_FILE")
