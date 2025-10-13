@@ -34,7 +34,8 @@ if [[ $FLUTTER_VERSION == "latest" ]]; then
 		__HASH=$(jq -r ".current_release.${FLUTTER_CHANNEL}" "$FLUTTER_RELEASE_MANIFEST_FILE")
 		__QUERY="select(.hash == \"${__HASH}\" and .dart_sdk_arch == \"${FLUTTER_ARCH}\")"
 
-		# Find the version with matching architecture
+		# Find the version with matching current release hash and architecture
+		# If no matching version is found, try to find the version with matching channel and architecture instead
 		FLUTTER_VERSION=$(jq -r ".releases | map(${__QUERY}) | .[0].version" "$FLUTTER_RELEASE_MANIFEST_FILE")
 		if [ -z "$FLUTTER_VERSION" ] || [ "$FLUTTER_VERSION" == "null" ]; then
 
